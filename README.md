@@ -1,0 +1,3 @@
+## Stock Analysis Website
+
+This website is designed to assist users with the fundamental analysis of stocks. By providing a comprehensive platform for evaluating financial statements, key ratios, and other critical financial metrics, the site aims to empower investors and analysts to make informed decisions. Whether you are a novice investor or an experienced analyst, this tool will simplify the process of analyzing stocks and help you identify potential investment opportunities.
