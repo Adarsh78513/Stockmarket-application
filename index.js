@@ -2,6 +2,7 @@ const dotnev = require('dotenv');
 dotnev.config(); // Load the .env file
 
 const { chat, generateText, readTextFile, financialFunctions } = require('./functions');
+const functionDeclarations = require('./functionDeclarations');
 
 // Initialize the generative model
 const { GoogleGenerativeAI, FunctionDeclarationSchemaType } = require("@google/generative-ai");

@@ -144,38 +144,38 @@ financialFunctions = {
         return new Promise((resolve, reject) => {
             const folderPath = 'src/Financial_result/Quaterly';
             fs.readdir(folderPath, (err, files) => {
-            if (err) {
-                console.error("Error reading the directory: ", err);
-                reject(err);
-                return;
-            }
-      
-            const file = files.find(file => file.includes(companySymbol));
-            const filePath = `${folderPath}/${file}`;
-      
-            const quaterEndDate = financialFunctions.getQuarterEndDate(year, quarter);
-            console.log(quaterEndDate);
-      
-            const readStream = fs.createReadStream(filePath).pipe(csv());
-      
-            let matchedRow = null;
-            readStream.on('data', (row) => {
-                if (row['PERIOD ENDED'] === quaterEndDate) {
-                    matchedRow = row;
+                if (err) {
+                    console.error("Error reading the directory: ", err);
+                    reject(err);
+                    return;
                 }
-            });
-      
-            readStream.on('end', () => {
-                if (matchedRow) {
-                    resolve(matchedRow);
-                } else {
-                    reject(new Error('No matching row found'));
-                }
-            });
-      
-            readStream.on('error', (err) => {
-              reject(err);
-            });
+        
+                const file = files.find(file => file.includes(companySymbol));
+                const filePath = `${folderPath}/${file}`;
+        
+                const quaterEndDate = financialFunctions.getQuarterEndDate(year, quarter);
+                console.log(quaterEndDate);
+        
+                const readStream = fs.createReadStream(filePath).pipe(csv());
+        
+                let matchedRow = null;
+                readStream.on('data', (row) => {
+                    if (row['PERIOD ENDED'] === quaterEndDate) {
+                        matchedRow = row;
+                    }
+                });
+        
+                readStream.on('end', () => {
+                    if (matchedRow) {
+                        resolve(matchedRow);
+                    } else {
+                        reject(new Error('No matching row found'));
+                    }
+                });
+        
+                readStream.on('error', (err) => {
+                    reject(err);
+                });
             });
         });
     },
