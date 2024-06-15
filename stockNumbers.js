@@ -51,5 +51,38 @@ async function fundamentalNumbers(ticker, queryOptions) {
     }
 }
 
-fundamentalNumbers('KAYNES.NS' , { period1: '2020-01-01',  module: 'all' });
+// fundamentalNumbers('KAYNES.NS' , { period1: '2020-01-01',  module: 'all' });
 
+async function insights(ticker, queryOptions) {
+    // No use as of now, there maybe no indian data available
+    try {
+        const result = await yahooFinance.insights(ticker, queryOptions);
+        console.log(result);
+    } catch (error) {
+        console.error('Error fetching insights:', error);
+    }
+}
+
+// insights('AAPL', { lang: 'en-US', reportsCount: 5, region: 'NS' });
+
+// (async () => {
+//     const result = await yahooFinance.quote('AAPL', { return: 'object' });
+//     console.log(result);
+// })();
+
+async function quote(ticker, queryOptions){
+    try {
+        const result = await yahooFinance.quote(ticker, queryOptions);
+        console.log(result);
+    } catch (error) {
+        console.error('Error fetching insights:', error);
+    }
+}
+
+
+module.exports = {
+    getStockChart,
+    numbers,
+    getDayGainers,
+    fundamentalNumbers
+};

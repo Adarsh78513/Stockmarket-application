@@ -2,6 +2,8 @@ const xlsx = require('xlsx');
 const fs = require('fs');
 const readline = require('readline');
 const csv = require('csv-parser');
+const path = require('path');
+const https = require('https');
 const rl = readline.createInterface({
     input: process.stdin,
     output: process.stdout
@@ -83,9 +85,34 @@ async function generateText(generativeAI, prompt) {
     console.log(text);
     console.log("Text generated successfully");
 }
+async function downloadXMLFile(url, downloadLocation) {
+    return new Promise((resolve, reject) => {
+        const filename = path.basename(url);
+        const filePath = path.join(downloadLocation, filename);
+        const dirPath = path.dirname(filePath);
+        if (!fs.existsSync(dirPath)) {
+            fs.mkdirSync(dirPath, { recursive: true });
+        }
+        const file = fs.createWriteStream(filePath);
+        https.get(url, response => {
+            response.pipe(file);
+    
+            file.on('finish', () => {
+            file.close();
+            console.log(`File downloaded successfully: ${filePath}`);
+            resolve();
+            });
+        }).on('error', err => {
+            fs.unlink(filePath); // Delete the file in case of error
+            console.error(`Error downloading file: ${err}`);
+            reject(err);
+        });
+    });
+}
 
 
-financialFunctions = {
+
+const financialFunctions = {
     // 1. Quaterly financial results
     // 2. Current date and quarter
     // 3. Time remaining for the quater to end
@@ -109,7 +136,7 @@ financialFunctions = {
             const row = data[i];
             const key = row[2];  // Column C
             const value = row[1]; // Column B
-            console.log(key, value);
+            // console.log(key, value);
             if (key && value) {
                 symbolDictionary[key] = value;
             }
@@ -162,6 +189,17 @@ financialFunctions = {
                 readStream.on('data', (row) => {
                     if (row['PERIOD ENDED'] === quaterEndDate) {
                         matchedRow = row;
+                        // Download the xml file
+                        const url = row['** XBRL'];
+                        const downloadLocation = 'src/XML';
+
+                        downloadXMLFile(url, downloadLocation)
+                            .then(() => {
+                                console.log("XML file downloaded successfully");
+                            })
+                            .catch((err) => {
+                                console.error("Error downloading XML file: ", err);
+                            });
                     }
                 });
         
