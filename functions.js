@@ -23,10 +23,8 @@ async function readTextFile(file) {
 }
 
 // chat with the generative model
-async function chat(generativeAI, info) {
+async function chat(model, info) {
     console.log("Type 'exit' to quit the chat");
-    const model = generativeAI.getGenerativeModel({ model: "gemini-pro" });
-
     const chat = model.startChat({
         history: [
             {
@@ -43,12 +41,13 @@ async function chat(generativeAI, info) {
         },
     });
 
-    async function ask(question) {
+    async function ask() {
         rl.question("You: ", async (msg) => {
             if (msg.toLowerCase() === "exit") {
                 rl.close();
             } else {
                 // Token count
+                console.log("Sending message...");
                 const history = await chat.getHistory();
                 const msgContent = { role: "user", parts: [{ text: msg }] };
                 const contents = [...history, msgContent];
@@ -57,6 +56,10 @@ async function chat(generativeAI, info) {
 
                 // Using streaming for less wait time
                 const result = await chat.sendMessageStream(msg);
+                const call = result.response.functionCalls()[0];
+                if (call) {
+                    console.log("There is a function call");
+                }
                 let text = "";
                 for await (const chunk of result.stream) {
                     const chunkText = chunk.text();

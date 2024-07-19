@@ -48,33 +48,6 @@ app.get('/', (req, res) => {
 });
 
 
-// // model with functions
-// const financialResultsFunctionDeclaration = {
-//     name: "timeRemaining",
-//     parameters: {
-//         type: "OBJECT",
-//         description: "Calculate the number of days remaining until a future date.",
-//         properties: {
-//             futuredate: {
-//                 type: "STRING",
-//                 description: "The future date to calculate the remaining days for, in a format recognized by the Date constructor.",
-//             },
-//         },
-//         required: ["futuredate"],
-//     },
-// };
-
-
-// const financialResults = {
-//     timeRemaining: async ({ futuredate }) => {
-//         const now = new Date();
-//         const future = new Date(futuredate);
-//         const diff = future - now;
-//         const days = Math.floor(diff / (1000 * 60 * 60 * 24));
-//         return days;
-//     }
-// }
-
 // Model with functions
 const model = generativeAI.getGenerativeModel({
     model: "gemini-1.5-flash",
@@ -127,8 +100,10 @@ async function chatt(model) {
     }
 }
 
+chat(model, "You are my financial advisor.");
+
 // console.log(financialResults.timeRemaining({ futuredate: "2025-12-24" }));
-chatt(model);
+// chatt(model);
 // (async () => {
 //     const dd = await financialFunctions.quaterlyFinancialResults({ year: 2022, quarter: 1, companySymbol: "ABB" });
 //     console.log(dd);
