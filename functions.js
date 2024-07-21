@@ -23,7 +23,7 @@ async function readTextFile(file) {
 }
 
 // chat with the generative model
-async function chat(model, info) {
+async function generate(model, info) {
     // for interactive chat, and with functions
     console.log("Type 'exit' to quit the chat");
     const chat = model.startChat({history: []});
@@ -41,19 +41,23 @@ async function chat(model, info) {
                 const { totalTokens } = await model.countTokens({ contents });
                 console.log("Total tokens: ", totalTokens);
 
-                // Using streaming for less wait time
-                const result = await chat.sendMessageStream(msg);
+                // Function call not working with this "Using streaming for less wait time"
+                const result = await chat.sendMessage(msg);
+                const call = result.response.functionCalls();
                 // TODO: Implement this function call
-                // const call = result.response.functionCalls()[0];
-                // if (call) {
-                //     console.log("There is a function call");
-                // }
-                let text = "";
-                for await (const chunk of result.stream) {
-                    const chunkText = chunk.text();
-                    console.log(chunkText);
-                    text += chunkText;
+                if (call) {
+                    console.log("There is a function call");
+                    console.log(call);
                 }
+                //// For streaming
+                // let text = ""
+                // for await (const chunk of result.stream) {
+                //     const chunkText = chunk.text();
+                //     console.log(chunkText);
+                //     text += chunkText;
+                // }
+                let text = await result.response.text();
+                console.log("Response: ", text);
                 ask();
             }
         });
@@ -210,7 +214,7 @@ const financialFunctions = {
     },
 }
 module.exports = {
-    chat,
+    generate,
     generateText,
     readTextFile,
     financialFunctions,

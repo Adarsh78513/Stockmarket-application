@@ -1,7 +1,7 @@
 const dotnev = require('dotenv');
 dotnev.config(); // Load the .env file
 
-const { chat, generateText, readTextFile, financialFunctions } = require('./functions');
+const { generate, generateText, readTextFile, financialFunctions } = require('./functions');
 const functionDeclaration = require('./functionDeclaration');
 
 // Initialize the generative model
@@ -64,7 +64,7 @@ const model = generativeAI.getGenerativeModel({
 console.log("Generative AI initialized")
 
 
-chat(model, "You are my financial advisor.");
+generate(model, "You are my financial advisor.");
 
 // console.log(financialResults.timeRemaining({ futuredate: "2025-12-24" }));
 // (async () => {
