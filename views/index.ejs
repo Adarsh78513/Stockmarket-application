@@ -1,9 +1,25 @@
 <!DOCTYPE html>
 <html>
+<head>
+    <link rel="stylesheet" type="text/css" href="css/index.css">
+    <title>Investor</title>
+</head>
 <body>
-
-<h1>My First Heading</h1>
-<p>My first paragraph.</p>
+    <div class="parent-center">
+        <div class="child-center">
+            <h2>Investor</h2>
+            <% if (company.length != 0) { %>
+                <p>Analysing <%= company %>....</p>
+            <% } else { %>
+                <p>What are we analysing today?</p>
+            <% } %>
+            <form action="/chooseCompany" method="POST">
+                <input type="text" name="company" placeholder="Company name">
+            </form>
+            <h2>Analysing <%- company %></h2>
+            
+        </div>
+    </div>
 
 </body>
 </html>

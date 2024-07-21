@@ -1,0 +1,10 @@
+/* center a class */
+.parent-center {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+.child-center {
+    text-align: center;
+}

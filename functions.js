@@ -24,22 +24,9 @@ async function readTextFile(file) {
 
 // chat with the generative model
 async function chat(model, info) {
+    // for interactive chat, and with functions
     console.log("Type 'exit' to quit the chat");
-    const chat = model.startChat({
-        history: [
-            {
-                role: "user",
-                parts: [{ text: info }],
-            },
-            {
-                role: "model",
-                parts: [{ text: "Great! What would you like to know?" }],
-            },
-        ],
-        generationConfig: {
-            maxOutputTokens:500,
-        },
-    });
+    const chat = model.startChat({history: []});
 
     async function ask() {
         rl.question("You: ", async (msg) => {
@@ -56,10 +43,11 @@ async function chat(model, info) {
 
                 // Using streaming for less wait time
                 const result = await chat.sendMessageStream(msg);
-                const call = result.response.functionCalls()[0];
-                if (call) {
-                    console.log("There is a function call");
-                }
+                // TODO: Implement this function call
+                // const call = result.response.functionCalls()[0];
+                // if (call) {
+                //     console.log("There is a function call");
+                // }
                 let text = "";
                 for await (const chunk of result.stream) {
                     const chunkText = chunk.text();

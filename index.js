@@ -14,8 +14,6 @@ const exphbs = require('express-handlebars');
 const nodemailer = require('nodemailer');
 const morgan = require('morgan');
 
-console.log("Hello World");
-
 var session = require('express-session');
 const { get } = require('http');
 const app = express();
@@ -44,66 +42,31 @@ app.use(session({
 app.use(express.static(__dirname + '/public'));
 
 app.get('/', (req, res) => {
-    res.render('index');
+    res.render('index', { company: "" });
+});
+
+app.post('/chooseCompany', (req, res) => {
+    let company = req.body.company;
+    console.log(company);
+    res.render('index', { company: company });
 });
 
 
 // Model with functions
 const model = generativeAI.getGenerativeModel({
     model: "gemini-1.5-flash",
+    generationConfig: { maxOutputTokens: 2000, temperature: 0.9 },
     tools: {
-        functionDeclarations: [functionDeclaration.currentDateAndQuarterFunctionDeclaration, functionDeclaration.companySymbolsFunctionDeclaration, functionDeclaration.getQuarterEndDateFunctionDeclaration, functionDeclaration.quaterlyFinancialResultsFunctionDeclaration],
+        functionDeclarations: [functionDeclaration.currentDateAndQuarterFunctionDeclaration],
     },
 });
 
-console.log("Generative AI initialized");
+console.log("Generative AI initialized")
 
-async function loadPromptAndSendToModel(filePath, generativeAI) {
-    try {
-        const prompt = await readTextFile(filePath);
-        // console.log("Prompt: ", prompt);
-        chat(generativeAI, prompt);
-        // generateText(generativeAI, prompt);
-    } catch (error) {
-        console.error("Error reading file:", error);
-    }
-}
-
-// loadPromptAndSendToModel("./Prompts/prompt.txt", generativeAI);
-
-
-
-// const modelWithFunctions = generativeAI.getGenerativeModel({
-//     model: "gemini-pro",
-//     tools: {
-//         functionDeclarations : [financialResultsFunctionDeclaration],
-//     },
-// });
-
-async function chatt(model) {
-    const chat = model.startChat();
-    const prompt = "What is the symbol for Reliance industries?";
-    const prompt2 = "Write a short poem on dogs.";
-    const result = await chat.sendMessage(prompt);
-    const call = result.response.functionCalls()[0];
-    console.log(call);
-    
-    if (call) {
-        const apiResponse  = await financialFunctions[call.name](call.args);
-        // console.log(apiResponse);
-
-        const result = await chat.sendMessage([{ functionResponse: {
-            name: call.name,
-            response: apiResponse,
-        }}]);
-        console.log(result.response.text());
-    }
-}
 
 chat(model, "You are my financial advisor.");
 
 // console.log(financialResults.timeRemaining({ futuredate: "2025-12-24" }));
-// chatt(model);
 // (async () => {
 //     const dd = await financialFunctions.quaterlyFinancialResults({ year: 2022, quarter: 1, companySymbol: "ABB" });
 //     console.log(dd);

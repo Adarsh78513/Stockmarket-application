@@ -1,22 +1,20 @@
+// Very important, these functions will crash if the properties is not passed in the description
 const currentDateAndQuarterFunctionDeclaration = {
     name: "currentDateAndQuarter",
     parameters: {
         type: "OBJECT",
         description: "Get the current year, date and quarter.",
-        properties: {},
+        properties: {
+            time: {
+                type: "STRING",
+                description: "The current time.",
+            },
+        },
         required: [],
     },
 };
 
-const companySymbolsFunctionDeclaration = {
-    name: "companySymbols",
-    parameters: {
-        type: "OBJECT",
-        description: "Get a dictionary of company symbols and their corresponding names, for use in financial analysis. The keys are the company names and the values are the company symbols. These symbols can be used to fetch financial data for the companies.",
-        properties: {},
-        required: [],
-    },
-};
+
 
 
 const getQuarterEndDateFunctionDeclaration = {
@@ -63,7 +61,6 @@ const quaterlyFinancialResultsFunctionDeclaration = {
 
 module.exports = {
     currentDateAndQuarterFunctionDeclaration,
-    companySymbolsFunctionDeclaration,
     getQuarterEndDateFunctionDeclaration,
     quaterlyFinancialResultsFunctionDeclaration,
 };
